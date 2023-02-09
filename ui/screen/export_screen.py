@@ -10,15 +10,14 @@ from ui.base_widget.utils_widget import *
 from model.expotModel import *
 from core.values.strings import AppStr
 from Detect_license_plate.deploy import *
+from ui.base_widget.utlis_func import *
 
 class ExportScreen (QMainWindow):
     def __init__(self, stackWidget, mainWindow):
         self.stackWidget = stackWidget
         self.mainWindow = mainWindow
-        # self.exportScreenInfo = exportScreenInfo
         super().__init__()
         self.setWindowTitle("Waste Management")
-        self.setGeometry(0,0,1920,1080)
         self.setStyleSheet("background-color: #1d212d")
         self.uiComponents()
         self.show()
@@ -26,13 +25,17 @@ class ExportScreen (QMainWindow):
         self.generalCursor = self.generalConnect.cursor()
         self.exportData = ExportData()
         self.imageLink = ''
+        self.checkStaffMeas= False
+        self.checkComp = False
+        self.checkCar= False #TODO: checkCar valid
+        self.canGo = False
     def uiComponents(self):
         self.column01 = QVBoxLayout()
         self.column01.setContentsMargins(20,20,20,20)
         self.column01.setAlignment(Qt.AlignTop)
 
         self.turn_info = QLabel('Thông tin lượt cân đầu ra')
-        self.turn_info.setFont(QFont("Arial", 20))
+        self.turn_info.setFont(QFont("Arial", SetRateToScreen(20)))
         self.turn_info.setStyleSheet("color: white")
         self.column01.addWidget(self.turn_info)
 
@@ -44,7 +47,7 @@ class ExportScreen (QMainWindow):
 
         self.input_Field = QWidget()
         self.input_Field.setObjectName("input_Field")
-        self.input_Field.setFixedSize(1100,900)
+        self.input_Field.setFixedSize(SetWidthToScreen(1100),SetHeightToScreen(900))
         self.input_Field.setStyleSheet(f'''
         QWidget {{
             background-color: #2e2e2e;
@@ -72,23 +75,23 @@ class ExportScreen (QMainWindow):
 
         self.column_Input = QVBoxLayout()
         self.column_Input.setAlignment(Qt.AlignTop)
-        self.column_Input.setSpacing(50)
+        self.column_Input.setSpacing(SetHeightToScreen(50))
         self.input_Field.setLayout(self.column_Input)
         
         self.declare = QLabel('Quy trình khai báo thu gom phế liệu')
         self.declare.setObjectName('declare')
-        self.declare.setFixedHeight(80)
+        self.declare.setFixedHeight(SetHeightToScreen(80))
         self.declare.setStyleSheet(
             "background-color: transparent;"
             "border: none;"
             "border-radius: 0px;"
             "color: white;"
         )
-        self.declare.setFont(QFont("Arial", 20))
+        self.declare.setFont(QFont("Arial", SetRateToScreen(20)))
         self.column_Input.addWidget(self.declare)
 
         self.row1 = QHBoxLayout()
-        self.row1.addWidget(buildCardItem(700, 80, 'Nhân viên phụ trách cân đầu vào'))
+        self.row1.addWidget(buildCardItem('Nhân viên phụ trách cân đầu vào'))
         self.input1 = buildInputForm(500, 80)
         self.input1.input.textChanged.connect(self.setStaffName)
         self.row1.addWidget(self.input1)
@@ -96,28 +99,37 @@ class ExportScreen (QMainWindow):
 
         self.row2 = QHBoxLayout()
         self.row2.setContentsMargins(0,0,0,0)
-        self.row2.addWidget(buildCardItem(700, 80, 'Công ty thu gom phế liệu'))
+        self.row2.addWidget(buildCardItem('Công ty thu gom phế liệu'))
         self.input2 = buildInputForm(500, 80)
         self.input2.input.textChanged.connect(self.setCompName)
         self.row2.addWidget(self.input2)
         self.column_Input.addLayout(self.row2)
-        self.input2.input.editingFinished.connect(self.detectLicense)
+        self.input2.input.returnPressed.connect(self.detectLicense)
         
         self.row3 = QHBoxLayout()
         self.row3.setContentsMargins(0,0,0,0)
-        self.row3.addWidget(buildCardItem(700, 80, 'Xe vận tải'))
-        self.input3 = buildInputForm(500, 80)
+        self.row3.addWidget(buildCardItem('Xe vận tải'))
+        self.input3 = buildInputForm(500, 80, False)
         self.input3.input.textChanged.connect(self.setCarLabel)
         self.row3.addWidget(self.input3)
         self.column_Input.addLayout(self.row3)
         
 
-        self.rowConfirm = QHBoxLayout()
-        self.rowConfirm.setAlignment(Qt.AlignHCenter)
-        self.column_Input.addLayout(self.rowConfirm)
-        self.confirmButton = buildButton("Xác nhận xe", 500, 60)
-        # self.confirmButton.clicked.connect(self.getLicensePlate)
-        self.rowConfirm.addWidget(self.confirmButton)
+        # self.rowConfirm = QHBoxLayout()
+        # self.rowConfirm.setAlignment(Qt.AlignHCenter)
+        # self.column_Input.addLayout(self.rowConfirm)
+        # self.confirmButton = buildButton("Xác nhận xe", SetWidthToScreen(500), SetHeightToScreen(60))
+        # # self.confirmButton.clicked.connect(self.getLicensePlate)
+        # self.rowConfirm.addWidget(self.confirmButton)
+
+        self.carPicture = QLabel()
+        self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
+        self.carPicture.setPixmap(self.carPixmap)
+        self.carPicture.setFixedSize(min(600, self.carPixmap.width()), min(350, self.carPixmap.height()))
+        self.rowPicture = QHBoxLayout()
+        self.rowPicture.setAlignment(Qt.AlignHCenter)
+        self.rowPicture.addWidget(self.carPicture)
+        self.column_Input.addLayout(self.rowPicture)
 
         self.column_record = QVBoxLayout()
         self.column_record.setAlignment(Qt.AlignTop)
@@ -132,43 +144,16 @@ class ExportScreen (QMainWindow):
             border-radius: 0px;
             color: white;
         }}''')
-        self.recordLabel.setFont(QFont("Arial", 20))
+        self.recordLabel.setFont(QFont("Arial", SetRateToScreen(20)))
         self.column_record.addWidget(self.recordLabel)
 
-        self.staffName = QLabel('Tên nhân viên: ')
-        self.staffName.setFixedHeight(100)
-        self.staffName.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.staffName.setFont(QFont("Arial", 20))
+        self.staffName = buildLabel('Tên nhân viên: ')
         self.column_record.addWidget(self.staffName)
 
-        self.compName = QLabel('Tên công ty: ')
-        self.compName.setFixedHeight(100)
-        self.compName.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.compName.setFont(QFont("Arial", 20))
+        self.compName = buildLabel('Tên công ty: ')
         self.column_record.addWidget(self.compName)
 
-        self.carLabel = QLabel('Biển kiểm soát: ')
-        self.carLabel.setFixedHeight(100)
-        self.carLabel.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.carLabel.setFont(QFont("Arial", 20))
+        self.carLabel = buildLabel('Biển kiểm soát: ')
         self.column_record.addWidget(self.carLabel)
 
         self.back_button = buildButton("Quay lại", 750,80)
@@ -177,7 +162,7 @@ class ExportScreen (QMainWindow):
 
         self.next_button = buildButton("Thông tin lượt cân", 750, 80)
         # self.next_button.clicked.connect(self.goToInfoScr)
-        self.next_button.clicked.connect(self.saveAndGo)
+        self.next_button.clicked.connect(self.trySaveAndGo)
         self.column_record.addWidget(self.next_button)
 
         self.widget = QWidget()
@@ -202,6 +187,8 @@ class ExportScreen (QMainWindow):
         print(result[0])
         return result
     def goToMainScr(self):
+        self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
+        self.carPicture.setPixmap(self.carPixmap)
         self.stackWidget.setCurrentWidget(self.mainWindow)
     # def goToInfoScr(self):
     #     self.stackWidget.setCurrentWidget(self.exportScreenInfo)
@@ -212,10 +199,12 @@ class ExportScreen (QMainWindow):
             staffInfo = self.getStaffInfo(staffId)
             self.staffName.setText('Thông tin nhân viên: ' + staffInfo[1])
             self.exportData.measStaff = staffInfo[1]
+            self.checkStaffMeas = True
         except Exception:
             staffId = -1
             self.exportData.measStaff = 'Staff Not Found'
             self.staffName.setText('Không tìm thấy nhân viên')
+            self.checkStaffMeas = False
     def setCompName(self):
         compId = -1
         try:
@@ -223,16 +212,18 @@ class ExportScreen (QMainWindow):
             compInfo = self.getCompInfo(compId)
             self.compName.setText('Tên công ty: ' + compInfo[1])
             self.exportData.compName = compInfo[1]
+            self.checkComp = True
         except Exception:
             compId = -1
             self.exportData.compName = 'Company Not Found'
             self.compName.setText('Không tìm thấy công ty')
+            self.checkComp  = False
     def setCarLabel(self):
         self.carLabel.setText('Biển kiểm soát: ' + self.input3.input.text())
-    def getLicensePlate(self):
-        self.takePhoto()
-        self.detectLicense()
-        print('bks')
+    # def getLicensePlate(self):
+    #     self.takePhoto()
+    #     self.detectLicense()
+    #     print('bks')
     def takePhoto(self):
         capture = cv2.VideoCapture()
         image = capture.read()
@@ -249,19 +240,33 @@ class ExportScreen (QMainWindow):
         try:
             self.input3.input.setText(AppStr.PLEASE_WAIT)
             print(AppStr.PLEASE_WAIT)
-            self.exportData.truck = deploy("Detect_license_plate\\test_images\\5.jpg")
+            # self.exportData.truck = deploy("Detect_license_plate\\test_images\\5.jpg")
             # self.exportData.truck = deploy(self.imageLink)
-            self.exportData.truck = str(self.exportData.truck).replace(';', '')
+            # self.exportData.truck = str(self.exportData.truck).replace(';', '')
+            self.exportData.truck = str(deploy("Detect_license_plate\\test_images\\5.jpg")).replace(';', '')
             self.exportData.evident = self.imageLink
             self.input3.input.setText(self.exportData.truck)
+            # self.carPixmap = QPixmap(self.imageLink)
+            self.carPixmap = QPixmap("Detect_license_plate\\test_images\\5.jpg")
+            self.carPicture.setPixmap(self.carPixmap)
             print(AppStr.DETECT_SUCCESS)
-            cv2.destroyWindow("origi")
-            cv2.destroyWindow("co")
-            cv2.destroyWindow("crop")
-            cv2.destroyWindow("frames2")
         except Exception:
             print(AppStr.DETECT_FAILED)
-    def saveAndGo(self):
+    def trySaveAndGo(self):
+        if self.checkStaffMeas and self.checkComp:
+            self.saveInfo()
+        else:
+            self.canGo = False
+            if not self.checkStaffMeas:
+                self.input1.input.setFocus()
+            elif not self.checkComp:
+                self.input2.input.setFocus()
+            ShowNotification(AppStr.ERROR_SAVE_INFO, AppStr.ERROR_FIELD_CONTENTS, self.saveInfo)
+    def clearField(self):
+        self.input1.input.clear()
+        self.input2.input.clear()
+        self.input3.input.clear()
+    def saveInfo(self):
         self.generalCursor.execute(
         """
             SELECT id FROM export
@@ -283,7 +288,4 @@ class ExportScreen (QMainWindow):
                 )
         )
         self.generalConnect.commit()
-    def clearField(self):
-        self.input1.input.clear()
-        self.input2.input.clear()
-        self.input3.input.clear()
+        self.canGo = True

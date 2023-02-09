@@ -10,7 +10,7 @@ from ui.screen.export_screen import *
 from ui.screen.export_screen_info import *
 from ui.screen.main_screen import *
 from ui.base_widget.utils_widget import *
-
+from ui.base_widget.utlis_func import *
 
 def main():
     def exitHandler():
@@ -21,6 +21,7 @@ def main():
     app.aboutToQuit.connect(exitHandler)
 
     widget_stack = QStackedWidget()
+    widget_stack.setFixedSize(SetWidthToScreen(1920), SetHeightToScreen(1080))
     widget_stack.setWindowTitle('Quản lý nhập - xuất phế liệu')
     widget_stack.setWindowIcon(QIcon('D:/Qt/Project/Test_Qt_Creator/assets/images/CTARG.png'))
     app.setStyleSheet('QApplication{background-color: yellow; color: blue}')
@@ -33,6 +34,7 @@ def main():
     def goToImportScr():
         widget_stack.setCurrentWidget(import_screen)
         import_screen.input1.input.setFocus()
+        
     mainWindow.button_import.clicked.connect(goToImportScr)
 
     def goToExportScr():
@@ -41,9 +43,10 @@ def main():
 
 
     def goToInfoScr():
-        widget_stack.setCurrentWidget(export_screen_info)
-        mainWindow.exportId = export_screen.exportData.id
-        export_screen_info.input1.input.setFocus()
+        if export_screen.canGo:
+            widget_stack.setCurrentWidget(export_screen_info)
+            mainWindow.exportId = export_screen.exportData.id
+            export_screen_info.input2.input.setFocus()
     export_screen.next_button.clicked.connect(goToInfoScr)
 
     

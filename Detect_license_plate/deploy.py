@@ -80,14 +80,14 @@ def plot_boxes(results, frame,classes):
 # function to recognize license plate numbers using  OCR
 def read_text(img):
     img = cv2.resize(img, None, fx=8, fy=8, interpolation=cv2.INTER_CUBIC)
-    cv2.imshow("origi",img)
+    # cv2.imshow("origi",img)
     img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret1,img2 = cv2.threshold(img1,145,250,cv2.THRESH_BINARY)
     cnts,new = cv2.findContours(img2, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     cnts = sorted(cnts, key = cv2.contourArea, reverse = True) [:1]
     cv2.drawContours(img,cnts,-1,(0,255,0),3)
     cv2.drawContours(img,cnts,-1,(0,255,0),3)
-    cv2.imshow("co",img)
+    # cv2.imshow("co",img)
     for c in cnts:
         perimeter = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.018 * perimeter, True)
@@ -105,7 +105,7 @@ def read_text(img):
     # img = cv2.adaptiveThreshold(cv2.GaussianBlur(img, (5, 5), 0), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
     # img = cv2.adaptiveThreshold(cv2.bilateralFilter(img, 9, 75, 75), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
     # img = cv2.adaptiveThreshold(cv2.medianBlur(img, 3), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    cv2.imshow("crop", img)
+    # cv2.imshow("crop", img)
     # return " "
     pytesseract.pytesseract.tesseract_cmd = "OCR\\tesseract.exe"
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
@@ -193,7 +193,7 @@ def deploy(img_path=None, vid_path=None,vid_out = None):
         frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
         # cv2.imshow("frames1", frame)
         frame, plate_number = plot_boxes(results, frame,classes = classes)
-        cv2.imshow("frames2", frame)
+        # cv2.imshow("frames2", frame)
         ### releaseing the writer
         alltime = time.time() - start
         print(alltime)

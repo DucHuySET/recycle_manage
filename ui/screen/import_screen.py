@@ -8,6 +8,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from ui.base_widget.utils_widget import *
 from model.importModel import *
+from core.values.strings import AppStr
+from ui.base_widget.utlis_func import ShowNotification
+from ui.base_widget.utlis_func import *
 
 class Import_screen(QMainWindow):
     def __init__(self, stackWidget, mainWindow):
@@ -15,21 +18,23 @@ class Import_screen(QMainWindow):
         self.mainWindow = mainWindow
         super().__init__()
         self.setWindowTitle("Waste Management")
-        self.setGeometry(0,0,1920,1080)
         self.setStyleSheet("background-color: #1d212d")
         self.uiComponents()
         self.show()
-        # self.importConnect = sqlite3.connect('database\import.db')
-        # self.importCursor = self.importConnect.cursor()
         self.generalConnect = sqlite3.connect('database\general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.importData = ImportData()
+        self.checkStaffMeas= False
+        self.checkStaffColl = False
+        self.checkPackage= False
+        self.checkType= False
+        self.checkInfo= False
     def uiComponents(self):
         self.column01 = QVBoxLayout()
-        self.column01.setContentsMargins(20,20,20,20)
+        self.column01.setContentsMargins(SetWidthToScreen(20),SetHeightToScreen(20),SetWidthToScreen(20),SetHeightToScreen(20))
 
         self.turn_info = QLabel('Thông tin lượt cân đầu vào')
-        self.turn_info.setFont(QFont("Arial", 20))
+        self.turn_info.setFont(QFont("Arial", SetRateToScreen(20)))
         self.turn_info.setStyleSheet("color: white")
         self.column01.addWidget(self.turn_info)
 
@@ -49,7 +54,7 @@ class Import_screen(QMainWindow):
 
         self.input_Field = QWidget()
         self.input_Field.setObjectName("input_Field")
-        self.input_Field.setFixedSize(1100,900)
+        self.input_Field.setFixedSize(SetWidthToScreen(1100),SetHeightToScreen(900))
         self.input_Field.setStyleSheet(f'''
         QWidget#input_Field {{
             background-color: #2e2e2e;
@@ -70,13 +75,13 @@ class Import_screen(QMainWindow):
 
         self.column_Input = QVBoxLayout()
         self.column_Input.setAlignment(Qt.AlignTop)
-        self.column_Input.setSpacing(50)
+        self.column_Input.setSpacing(SetRateToScreen(30))
         self.input_Field.setLayout(self.column_Input)
         
         self.declare = QLabel('Quy trình nhập phế liệu đầu vào')
         self.declare.setObjectName('declare')
-        self.declare.setFixedHeight(80)
-        self.declare.setContentsMargins(12,0,12,0)
+        self.declare.setFixedHeight(SetRateToScreen(80))
+        self.declare.setContentsMargins(SetRateToScreen(12),0,SetRateToScreen(12),0)
         self.declare.setStyleSheet(f'''
         QLabel#declare {{
             background-color: transparent;
@@ -84,11 +89,11 @@ class Import_screen(QMainWindow):
             border-radius: 0px;
             color: white;
         }}''')
-        self.declare.setFont(QFont("Arial", 20))
+        self.declare.setFont(QFont("Arial", SetRateToScreen(20)))
         self.column_Input.addWidget(self.declare)
 
         self.row1 = QHBoxLayout()
-        self.row1.addWidget(buildCardItem(700, 80, 'Nhân viên phụ trách cân đầu vào'))
+        self.row1.addWidget(buildCardItem('Nhân viên phụ trách cân đầu vào'))
         self.input1 = buildInputForm(400, 80)
         self.input1.input.textChanged.connect(self.setStaffNameMeas)
         self.row1.addWidget(self.input1)
@@ -96,7 +101,7 @@ class Import_screen(QMainWindow):
 
         self.row2 = QHBoxLayout()
         self.row2.setContentsMargins(0,0,0,0)
-        self.row2.addWidget(buildCardItem(700, 80, 'Nhân viên tập kết phế liệu'))
+        self.row2.addWidget(buildCardItem('Nhân viên tập kết phế liệu'))
         self.input2 = buildInputForm(400, 80)
         self.input2.input.textChanged.connect(self.setStaffNameColl)
         self.row2.addWidget(self.input2)
@@ -104,7 +109,7 @@ class Import_screen(QMainWindow):
         
         self.row3 = QHBoxLayout()
         self.row3.setContentsMargins(0,0,0,0)
-        self.row3.addWidget(buildCardItem(700, 80, 'Thùng bì'))
+        self.row3.addWidget(buildCardItem('Thùng bì'))
         self.input3 = buildInputForm(400, 80)
         self.input3.input.textChanged.connect(self.setPackage)
         self.row3.addWidget(self.input3)
@@ -112,7 +117,7 @@ class Import_screen(QMainWindow):
 
         self.row4 = QHBoxLayout()
         self.row4.setContentsMargins(0,0,0,0)
-        self.row4.addWidget(buildCardItem(700, 80, 'Chủng loại phế liệu'))
+        self.row4.addWidget(buildCardItem('Chủng loại phế liệu'))
         self.input4 = buildInputForm(400, 80)
         self.input4.input.textChanged.connect(self.setType)
         self.row4.addWidget(self.input4)
@@ -120,7 +125,7 @@ class Import_screen(QMainWindow):
 
         self.row5 = QHBoxLayout()
         self.row5.setContentsMargins(0,0,0,0)
-        self.row5.addWidget(buildCardItem(700, 80, 'Xác nhận khối lượng cân'))
+        self.row5.addWidget(buildCardItem('Xác nhận khối lượng cân'))
         self.input5 = buildInputForm(400, 80)
         self.input5.input.textChanged.connect(self.setInfo)
         self.row5.addWidget(self.input5)
@@ -129,7 +134,7 @@ class Import_screen(QMainWindow):
         self.rowConfirm = QHBoxLayout()
         self.rowConfirm.setAlignment(Qt.AlignHCenter)
         self.column_Input.addLayout(self.rowConfirm)
-        self.confirmButton = buildButton("Xác nhận thông tin cân", 500, 60)
+        self.confirmButton = buildButton("Xác nhận thông tin cân", SetWidthToScreen(500), SetHeightToScreen(60))
         self.confirmButton.clicked.connect(self.readScaleData)
         self.rowConfirm.addWidget(self.confirmButton)
 
@@ -138,7 +143,7 @@ class Import_screen(QMainWindow):
         self.recordField.setLayout(self.column_record)
 
         self.recordLabel = QLabel('Thông tin bản ghi')
-        self.recordLabel.setFixedHeight(100)
+        self.recordLabel.setFixedHeight(SetHeightToScreen(100))
         self.recordLabel.setStyleSheet(f'''
         QLabel {{
             background-color: transparent;
@@ -146,75 +151,30 @@ class Import_screen(QMainWindow):
             border-radius: 0px;
             color: white;
         }}''')
-        self.recordLabel.setFont(QFont("Arial", 20))
+        self.recordLabel.setFont(QFont("Arial", SetRateToScreen(20)))
         self.column_record.addWidget(self.recordLabel)
 
-        self.staffNameMeas = QLabel('Tên nhân viên cân: ')
-        self.staffNameMeas.setFixedHeight(100)
-        self.staffNameMeas.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.staffNameMeas.setFont(QFont("Arial", 20))
+        self.staffNameMeas = buildLabel('Tên nhân viên cân: ')
         self.column_record.addWidget(self.staffNameMeas)
 
-        self.staffNameColl = QLabel('Nhân viên tập kết phế liệu: ')
-        self.staffNameColl.setFixedHeight(100)
-        self.staffNameColl.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.staffNameColl.setFont(QFont("Arial", 20))
+        self.staffNameColl = buildLabel('Nhân viên tập kết phế liệu: ')
         self.column_record.addWidget(self.staffNameColl)
 
-        self.package = QLabel('Thùng bì: ')
-        self.package.setFixedHeight(100)
-        self.package.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.package.setFont(QFont("Arial", 20))
+        self.package = buildLabel('Thùng bì: ')
         self.column_record.addWidget(self.package)
 
-        self.type = QLabel('Chủng loại phế liệu: ')
-        self.type.setFixedHeight(100)
-        self.type.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.type.setFont(QFont("Arial", 20))
+        self.type = buildLabel('Chủng loại phế liệu: ')
         self.column_record.addWidget(self.type)
 
-        self.measInfo = QLabel('Thông tin cân: ')
-        self.measInfo.setFixedHeight(100)
-        self.measInfo.setStyleSheet(f'''
-        QLabel {{
-            background-color: #474747;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }}''')
-        self.measInfo.setFont(QFont("Arial", 20))
+        self.measInfo = buildLabel('Thông tin cân: ')
         self.column_record.addWidget(self.measInfo)
 
-        self.saveButton = buildButton("Lưu", 750, 80)
+        self.saveButton = buildButton("Lưu", SetWidthToScreen(750), SetHeightToScreen(80))
         # self.saveButton.clicked.connect(self.goToMainScr)
         self.column_record.addWidget(self.saveButton)
-        self.saveButton.clicked.connect(self.saveInfo)
+        self.saveButton.clicked.connect(self.trySaveInfo)
 
-        self.back_button = buildButton("Quay lại", 750, 80)
+        self.back_button = buildButton("Quay lại", SetWidthToScreen(750), SetHeightToScreen(80))
         self.back_button.clicked.connect(self.goToMainScr)
         self.column_record.addWidget(self.back_button)
 
@@ -259,10 +219,11 @@ class Import_screen(QMainWindow):
             staffInfo = self.getStaffInfo(staffId)
             self.staffNameMeas.setText('Tên nhân viên cân: ' + staffInfo[1])
             self.importData.measStaff = staffInfo[1]
+            self.checkStaffMeas = True
         except Exception:
             staffId = -1
             self.staffNameMeas.setText('Không tìm thấy nhân viên')
-            
+            self.checkStaffMeas = False
     def setStaffNameColl(self):
         staffId = -1
         try: 
@@ -271,9 +232,11 @@ class Import_screen(QMainWindow):
             staffInfo = self.getStaffInfo(staffId)
             self.staffNameColl.setText('Nhân viên cân tập kết: ' + staffInfo[1])
             self.importData.collStaff = staffInfo[1]
+            self.checkStaffColl = True
         except Exception:
             staffId = -1
             self.staffNameColl.setText('Không tìm thấy nhân viên')
+            self.checkStaffColl = False
     def setPackage(self):
         packId = -1
         try: 
@@ -281,9 +244,11 @@ class Import_screen(QMainWindow):
             packInfo = self.getPackInfo(packId)
             self.package.setText('Thùng bì: ' + packInfo[1])
             self.importData.pack = packInfo[1]
+            self.checkPackage = True
         except Exception:
             packId = -1
             self.package.setText('Không tìm thấy thùng bì')
+            self.checkPackage = False
     def setType(self):
         typeId = -1
         try: 
@@ -292,16 +257,70 @@ class Import_screen(QMainWindow):
             typeInfo = self.getTypeInfo(typeId)
             self.type.setText('Chủng loại phế liệu: ' + typeInfo[1])
             self.importData.scrapType = typeInfo[1]
+            self.checkType = True
         except Exception:
             typeId = -1
             self.type.setText('Không tìm thấy loại phế liệu')
+            self.checkType = False
     def setInfo(self):
         try:
             self.importData.weight = float(self.input5.input.text())
+            # self.checkInfo = True
         except Exception:
             self.measInfo.setText('Khối lượng cân: ' + '0.0')
+            # self.checkInfo = False
         self.measInfo.setText('Khối lượng cân: ' + self.input5.input.text())
+    def trySaveInfo(self):
+        if self.checkStaffMeas and self.checkStaffColl and self.checkPackage and self.checkType :
+            self.saveInfo()
+        else:
+            if not self.checkStaffMeas:
+                self.input1.input.setFocus()
+            elif not self.checkStaffColl:
+                self.input2.input.setFocus()
+            elif not self.checkPackage:
+                self.input3.input.setFocus()
+            elif not self.checkType:
+                self.input4.input.setFocus()
+            ShowNotification(AppStr.ERROR_SAVE_INFO, AppStr.ERROR_FIELD_CONTENTS, self.saveInfo)
+
+    def resetInfo(self):
+        self.input1.input.clear()
+        self.input2.input.clear()
+        self.input3.input.clear()
+        self.input4.input.clear()
+        self.input5.input.clear()
+    def readScaleData(self):
+        try:
+            ser = serial.Serial(
+                port='COM5',
+                baudrate=9600,
+                timeout=1,
+                parity=serial.PARITY_ODD,
+                stopbits=serial.STOPBITS_TWO,
+                bytesize=serial.EIGHTBITS
+            )
+            print('doc can')
+
+            ser.isOpen()
+
+            for i in range(10):
+                bytesToRead = ser.inWaiting()
+                data = ser.read(bytesToRead)
+                time.sleep(2)
+                # print(data)
+                self.dataStr = str(data).replace("b\'", "").replace("\'","")
+                print(self.dataStr)
+                if self.dataStr != "":
+                    self.input5.input.setText(self.dataStr)
+                    break
+            # self.scaleData = readRs232()
+            # if self.dataStr != "":
+            #     self.input4.input.setText(self.scaleData)
+        except Exception:
+            print('Không đọc được giá trị cân')
     def saveInfo(self):
+        self.input1.input.setFocus()
         self.generalCursor.execute(
             """
                 SELECT id FROM import
@@ -328,37 +347,3 @@ class Import_screen(QMainWindow):
         # self.generalConnect.close()
         self.resetInfo()
         self.stackWidget.setCurrentWidget(self.mainWindow)
-    def resetInfo(self):
-        self.input1.input.clear()
-        self.input2.input.clear()
-        self.input3.input.clear()
-        self.input4.input.clear()
-        self.input5.input.clear()
-    def readScaleData(self):
-        try:
-            ser = serial.Serial(
-                port='COM8',
-                baudrate=9600,
-                timeout=1,
-                parity=serial.PARITY_ODD,
-                stopbits=serial.STOPBITS_TWO,
-                bytesize=serial.EIGHTBITS
-            )
-
-            ser.isOpen()
-
-            for i in range(10):
-                bytesToRead = ser.inWaiting()
-                data = ser.read(bytesToRead)
-                time.sleep(2)
-                # print(data)
-                self.dataStr = str(data).replace("b\'", "").replace("\'","")
-                print(self.dataStr)
-                if self.dataStr != "":
-                    self.input5.input.setText(self.dataStr)
-                    break
-            # self.scaleData = readRs232()
-            # if self.dataStr != "":
-            #     self.input4.input.setText(self.scaleData)
-        except Exception:
-            print('Không đọc được giá trị cân')

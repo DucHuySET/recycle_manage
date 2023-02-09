@@ -76,8 +76,8 @@ create_table_pack = """
 create_table_import = """
     CREATE TABLE import (
         id integer,
-        measstaff text,
-        collstaff text,
+        mea_staff text,
+        coll_staff text,
         pack text,
         type text,
         weight real,
@@ -85,29 +85,75 @@ create_table_import = """
     )
 """
 
+# ### create table for import
+# create_table_import = """
+#     CREATE TABLE import (
+#         id integer,
+#         mea_staffid integer,
+#         mea_staff text,
+#         coll_staff_id integer,
+#         coll_staff text,
+#         pack_id integer,
+#         pack text,
+#         type_id integer,
+#         type text,
+#         weight real,
+#         time text
+#     )
+# """
+
 ### create table for export
 create_table_export = """
     CREATE TABLE export (
         id integer,
         measstaff text,
-        compname text,
+        comp_name text,
         truck text,
         time text
     )
 """
 
+# ### create table for export
+# create_table_export = """
+#     CREATE TABLE export (
+#         id integer,
+#         mea_staff_id integer,
+#         measstaff text,
+#         coomp_id integer,
+#         comp_name text,
+#         truck text,
+#         time text
+#     )
+# """
+
 ### create table for export info
 create_table_export_info = """
     CREATE TABLE export_info (
         id integer,
-        exportid integer,
-        turn id,
+        export_id integer,
+        turn integer,
         pack text,
         scrap text,
         weight text,
         time text
     )
 """
+
+# ### create table for export info
+# create_table_export_info = """
+#     CREATE TABLE export_info (
+#         id integer,
+#         export_id integer,
+#         turn integer,
+#         pack_id integer,
+#         pack text,
+#         scrap_id integer,
+#         scrap text,
+#         weight text,
+#         time text
+#     )
+# """
+
 
 ### INSERT DATA TO TABLES
 ### insert to staff table
@@ -126,11 +172,11 @@ insert_to_staff = """
 ### insert to company table
 insert_to_company = """
     INSERT INTO company VALUES (
-        00001,
-        'CTARG',
+        00002,
+        'HUST',
         0123456789,
         '110110',
-        'C9-420',
+        'Dai Co Viet',
         'CT10105',
         '0',
         '0'
@@ -140,14 +186,14 @@ insert_to_company = """
 ### insert to trucks table
 insert_to_truck = """
     INSERT INTO truck VALUES (
-        00001,
-        00001,
-        '88H8-8888',
-        'Thaco',
-        '5000kg',
-        'Trần Văn B',
-        '0901541688',
-        '10001',
+        00002,
+        00002,
+        '88H8-5555',
+        'Hyundai',
+        '2000kg',
+        'Lê Văn D',
+        '090154545',
+        '10002',
         '00:00',
         '00:00'
     )
@@ -155,9 +201,9 @@ insert_to_truck = """
 ### insert to scrap table
 insert_to_scrap = """
     INSERT INTO scrap VALUES (
-        20001,
-        'Nhôm vụn',
-        'Do phay nhôm',
+        00002,
+        'Sắt',
+        '',
         'kg',
         '00:00',
         '00:00'
@@ -167,9 +213,9 @@ insert_to_scrap = """
 ### insert into pack table
 insert_to_pack = """
     INSERT INTO pack VALUES (
-        30001,
-        'Thùng 01',
-        2.0,
+        00002,
+        'Phuy 02',
+        4.0,
         false,
         '00:00',
         '00:00'
@@ -201,7 +247,7 @@ insert_to_pack = """
 # cursor.execute(insert_to_pack)
 # connection.commit()
 
-# cursor.execute("DROP TABLE import")
+# cursor.execute("DROP TABLE export")
 # connection.commit()
 
 connection.close()
