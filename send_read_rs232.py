@@ -1,27 +1,27 @@
 import time
 import serial
 import random
-async def readRs232():
+def readRs232():
     ser = serial.Serial(
-        port='COM8',
+        port='COM2',
         baudrate=9600,
         timeout=1,
-        parity=serial.PARITY_ODD,
-        stopbits=serial.STOPBITS_TWO,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS
     )
 
     ser.isOpen()
-    # Reading the data from the serial port. This will be running in an infinite loop.
-    for i in range(10):
+    # Reading the data from the serial port.
+    for i in range(20):
         bytesToRead = ser.inWaiting()
         data = ser.read(bytesToRead)
-        await time.sleep(2)
+        time.sleep(1)
         print(data)
         dataStr = str(data).replace("b\'", "").replace("\'","")
         if dataStr != "":
             return dataStr
-
+# readRs232()
 # def sendRs232():
 #     serPort = serial.Serial(port= 'COM10')
 #     while True:
@@ -31,3 +31,21 @@ async def readRs232():
 #         print('sent')
 #         time.sleep(1)
 # sendRs232()
+
+def sendRs232():
+    ser = serial.Serial(
+        port='COM2',
+        baudrate=9600,
+        timeout=1,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS
+    )
+
+    ser.isOpen()
+    # Reading the data from the serial port.
+    while True:
+        ser.write('1'.encode())
+        print('1'.encode())
+        time.sleep(1)
+sendRs232()

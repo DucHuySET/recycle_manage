@@ -104,7 +104,7 @@ class ExportScreen (QMainWindow):
         self.input2.input.textChanged.connect(self.setCompName)
         self.row2.addWidget(self.input2)
         self.column_Input.addLayout(self.row2)
-        self.input2.input.returnPressed.connect(self.detectLicense)
+        self.input2.input.returnPressed.connect(self.getLicensePlate)
         
         self.row3 = QHBoxLayout()
         self.row3.setContentsMargins(0,0,0,0)
@@ -220,38 +220,48 @@ class ExportScreen (QMainWindow):
             self.checkComp  = False
     def setCarLabel(self):
         self.carLabel.setText('Biển kiểm soát: ' + self.input3.input.text())
-    # def getLicensePlate(self):
-    #     self.takePhoto()
-    #     self.detectLicense()
-    #     print('bks')
+    def getLicensePlate(self):
+        self.takePhoto()
+        self.detectLicense()
+        print('bks')
     def takePhoto(self):
+        rtsp = "rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live"
         capture = cv2.VideoCapture()
-        image = capture.read()
+        capture.open(rtsp)
+        capture.set(3, 1920)  # ID number for width is 3
+        capture.set(4, 1080)  # ID number for height is 480
+        capture.set(10, 100)    # ID number for brightness is 10qq
+        result, image = capture.read()
+        image = cv2.resize(image, (1920, 1080))
         dateTime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
-        if image:
-            cv2.imshow(dateTime, image)
+        print(dateTime)
+        if result:
+            # cv2.imshow(dateTime, image)
             self.imageLink = "database\\truck_image\\" + dateTime + ".png"
             cv2.imwrite(self.imageLink, image)
-            cv2.waitKey(0)
-            cv2.destroyWindow(dateTime)
+            # cv2.waitKey(0)
+            time.sleep(5)
+            # cv2.destroyWindow(dateTime)
         else:
             print(AppStr.NO_IMAGE_DETECT)
     def detectLicense(self):
         try:
             self.input3.input.setText(AppStr.PLEASE_WAIT)
             print(AppStr.PLEASE_WAIT)
-            # self.exportData.truck = deploy("Detect_license_plate\\test_images\\5.jpg")
-            # self.exportData.truck = deploy(self.imageLink)
-            # self.exportData.truck = str(self.exportData.truck).replace(';', '')
-            self.exportData.truck = str(deploy("Detect_license_plate\\test_images\\5.jpg")).replace(';', '')
+            self.exportData.truck = str(deploy(self.imageLink)).replace(';', '')
+            # self.exportData.truck = str(deploy("Detect_license_plate\\test_images\\5.jpg")).replace(';', '')
             self.exportData.evident = self.imageLink
             self.input3.input.setText(self.exportData.truck)
-            # self.carPixmap = QPixmap(self.imageLink)
-            self.carPixmap = QPixmap("Detect_license_plate\\test_images\\5.jpg")
+            self.carPixmap = QPixmap(self.imageLink)
+            # self.carPixmap = QPixmap("Detect_license_plate\\test_images\\5.jpg")
+            self.carPixmap.scaled(500, 300)
             self.carPicture.setPixmap(self.carPixmap)
             print(AppStr.DETECT_SUCCESS)
         except Exception:
             print(AppStr.DETECT_FAILED)
+            self.input3.input.setText(AppStr.DETECT_FAILED)
+            self.carPixmap = QPixmap(self.imageLink)
+            self.carPicture.setPixmap(self.carPixmap)
     def trySaveAndGo(self):
         if self.checkStaffMeas and self.checkComp:
             self.saveInfo()
