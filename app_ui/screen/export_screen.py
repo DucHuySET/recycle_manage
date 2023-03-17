@@ -6,11 +6,11 @@ from datetime import datetime
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
-from ui.base_widget.utils_widget import *
+from app_ui.base_widget.utils_widget import *
 from model.expotModel import *
 from core.values.strings import AppStr
 from Detect_license_plate.deploy import *
-from ui.base_widget.utlis_func import *
+from app_ui.base_widget.utlis_func import *
 
 class ExportScreen (QMainWindow):
     def __init__(self, stackWidget, mainWindow):

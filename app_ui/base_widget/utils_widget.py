@@ -4,7 +4,7 @@ from datetime import datetime
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QLine, QRect, QEvent
 from PyQt5.QtGui import *
-from ui.base_widget.utlis_func import *
+from app_ui.base_widget.utlis_func import *
 
 class buildCardBase(QWidget):
     def __init__(self,width, height):
