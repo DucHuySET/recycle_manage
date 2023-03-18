@@ -6,11 +6,11 @@ from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from ui.base_widget.utils_widget import *
+from app_ui.base_widget.utils_widget import *
 from model.importModel import *
 from core.values.strings import AppStr
-from ui.base_widget.utlis_func import ShowNotification
-from ui.base_widget.utlis_func import *
+from app_ui.base_widget.utlis_func import ShowNotification
+from app_ui.base_widget.utlis_func import *
 
 class Import_screen(QMainWindow):
     def __init__(self, stackWidget, mainWindow):

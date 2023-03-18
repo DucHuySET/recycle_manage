@@ -5,12 +5,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QLine, QRect, pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QFont, QIcon
 
-from ui.screen.import_screen import *
-from ui.screen.export_screen import *
-from ui.screen.export_screen_info import *
-from ui.screen.main_screen import *
-from ui.base_widget.utils_widget import *
-from ui.base_widget.utlis_func import *
+from app_ui.screen.import_screen import *
+from app_ui.screen.export_screen import *
+from app_ui.screen.export_screen_info import *
+from app_ui.screen.main_screen import *
+from app_ui.base_widget.utils_widget import *
+from app_ui.base_widget.utlis_func import *
 
 def main():
     def exitHandler():
@@ -62,7 +62,5 @@ def main():
     sys.exit(app.exec())
 
     
-
-
 if __name__ == "__main__":
     main()

@@ -6,11 +6,11 @@ from datetime import datetime
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
-from ui.base_widget.utils_widget import *
+from app_ui.base_widget.utils_widget import *
 from model.expotModel import *
 from core.values.strings import AppStr
 from Detect_license_plate.deploy import *
-from ui.base_widget.utlis_func import *
+from app_ui.base_widget.utlis_func import *
 
 class ExportScreen (QMainWindow):
     def __init__(self, stackWidget, mainWindow):
@@ -299,3 +299,17 @@ class ExportScreen (QMainWindow):
         )
         self.generalConnect.commit()
         self.canGo = True
+
+    # def connectCamera(self) :
+        # cap = cv2.VideoCapture('rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live') #IP Camera
+    
+        # while(True):
+        #     self.frame = cap.read()
+        #     self.frame=cv2.resize(self.frame, (960, 540)) 
+        #     # cv2.imshow('Capturing',frame)
+            
+        #     # if cv2.waitKey(1) & 0xFF == ord('q'): #click q to stop capturing
+        #     #     break
+        # cap.release()
+        # cv2.destroyAllWindows()
+        # return 0

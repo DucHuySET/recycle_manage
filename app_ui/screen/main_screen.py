@@ -4,8 +4,8 @@ from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from ui.base_widget.utils_widget import *
-from ui.base_widget.utlis_func import *
+from app_ui.base_widget.utils_widget import *
+from app_ui.base_widget.utlis_func import *
 
 class MainWindow(QMainWindow):
     def __init__(self):

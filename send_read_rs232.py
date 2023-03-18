@@ -3,7 +3,7 @@ import serial
 import random
 def readRs232():
     ser = serial.Serial(
-        port='COM2',
+        port='COM6',
         baudrate=9600,
         timeout=1,
         parity=serial.PARITY_NONE,
@@ -32,20 +32,20 @@ def readRs232():
 #         time.sleep(1)
 # sendRs232()
 
-def sendRs232():
-    ser = serial.Serial(
-        port='COM2',
-        baudrate=9600,
-        timeout=1,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS
-    )
+# def sendRs232():
+#     ser = serial.Serial(
+#         port='COM6',
+#         baudrate=9600,
+#         timeout=1,
+#         parity=serial.PARITY_NONE,
+#         stopbits=serial.STOPBITS_ONE,
+#         bytesize=serial.EIGHTBITS
+#     )
 
-    ser.isOpen()
-    # Reading the data from the serial port.
-    while True:
-        ser.write('1'.encode())
-        print('1'.encode())
-        time.sleep(1)
-sendRs232()
+#     ser.isOpen()
+#     # Reading the data from the serial port.
+#     while True:
+#         ser.write('1'.encode())
+#         print('1'.encode())
+#         time.sleep(1)
+# sendRs232()

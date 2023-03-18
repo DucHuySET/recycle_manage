@@ -1,7 +1,6 @@
 # program to capture single image from webcam in python
   
 # importing OpenCV library
-import cvui
 import cv2
 from datetime import datetime
 # initialize the camera
