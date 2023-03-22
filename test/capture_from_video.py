@@ -1,7 +1,7 @@
 # program to capture single image from webcam in python
   
 # importing OpenCV library
-import cvui
+# import cvui
 import cv2
 from datetime import datetime
 # initialize the camera
@@ -9,21 +9,21 @@ from datetime import datetime
 # current device, assign a value in cam_port 
 # variable according to that
 
-rtsp_username = "admin"
-rtsp_password = "Hanh.1972"
-width = 800
-height = 480
-cam_no = 1
+# rtsp_username = "admin"
+# rtsp_password = "Hanh.1972"
+# width = 800
+# height = 480
+# cam_no = 1
 
-def create_camera (channel):
-    rtsp = "rtsp://" + rtsp_username + ":" + rtsp_password + "@192.168.1.104:554/Streaming/channels/" + channel + "02" #change the IP to suit yours
+def create_camera ():
+    rtsp = "rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live" 
     cap = cv2.VideoCapture()
     cap.open(rtsp)
-    cap.set(3, 640)  # ID number for width is 3
-    cap.set(4, 480)  # ID number for height is 480
+    cap.set(3, 1920)  # ID number for width is 3
+    cap.set(4, 1080)  # ID number for height is 480
     cap.set(10, 100)  # ID number for brightness is 10qq
     return cap
-cam = create_camera(str(cam_no))
+cam = create_camera()
 
 # cvui.init('screen')
 # while True:
@@ -59,7 +59,9 @@ cam = create_camera(str(cam_no))
 dateTime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
 print(dateTime)
 # reading the input using the camera
-result, image = cam.read()
+result, image0 = cam.read()
+image = cv2.resize(image0, (1920,1080))
+
   
 # If image will detected without any error, 
 # show result
@@ -70,7 +72,7 @@ if result:
     cv2.imshow(dateTime, image)
   
     # saving image in local storage
-    cv2.imwrite("captureTest.png", image)
+    cv2.imwrite(dateTime + ".png", image)
   
     # If keyboard interrupt occurs, destroy image 
     # window
