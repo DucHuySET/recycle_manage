@@ -69,7 +69,7 @@ class ExportScreenInfo (QMainWindow):
 
         self.column_Input = QVBoxLayout()
         self.column_Input.setAlignment(Qt.AlignTop)
-        self.column_Input.setSpacing(50)
+        self.column_Input.setSpacing(SetHeightToScreen(30))
         self.input_Field.setLayout(self.column_Input)
         
         self.declare = QLabel('Quy trình cân phế liệu xuất bán')

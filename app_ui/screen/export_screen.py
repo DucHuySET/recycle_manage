@@ -4,7 +4,7 @@ import cv2
 from datetime import datetime
 # from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont, QPixmap
 from app_ui.base_widget.utils_widget import *
 from model.expotModel import *
@@ -21,6 +21,7 @@ class ExportScreen (QMainWindow):
         self.setStyleSheet("background-color: #1d212d")
         self.uiComponents()
         self.show()
+        self.getStreamVideo()
         self.generalConnect = sqlite3.connect('database\general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportData = ExportData()
@@ -75,7 +76,7 @@ class ExportScreen (QMainWindow):
 
         self.column_Input = QVBoxLayout()
         self.column_Input.setAlignment(Qt.AlignTop)
-        self.column_Input.setSpacing(SetHeightToScreen(50))
+        self.column_Input.setSpacing(SetHeightToScreen(30))
         self.input_Field.setLayout(self.column_Input)
         
         self.declare = QLabel('Quy trình khai báo thu gom phế liệu')
@@ -122,13 +123,14 @@ class ExportScreen (QMainWindow):
         # # self.confirmButton.clicked.connect(self.getLicensePlate)
         # self.rowConfirm.addWidget(self.confirmButton)
 
-        self.carPicture = QLabel()
+        self.streamVideo = QLabel()
         self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
-        self.carPicture.setPixmap(self.carPixmap)
-        self.carPicture.setFixedSize(min(600, self.carPixmap.width()), min(350, self.carPixmap.height()))
+        self.streamVideo.setPixmap(self.carPixmap)
+        # self.streamVideo.setFixedSize(min(600, self.carPixmap.width()), min(350, self.carPixmap.height()))
+        self.streamVideo.setFixedSize(720, 400)
         self.rowPicture = QHBoxLayout()
         self.rowPicture.setAlignment(Qt.AlignHCenter)
-        self.rowPicture.addWidget(self.carPicture)
+        self.rowPicture.addWidget(self.streamVideo)
         self.column_Input.addLayout(self.rowPicture)
 
         self.column_record = QVBoxLayout()
@@ -165,6 +167,9 @@ class ExportScreen (QMainWindow):
         self.next_button.clicked.connect(self.trySaveAndGo)
         self.column_record.addWidget(self.next_button)
 
+        self.resultImage = QLabel()
+        self.column_record.addWidget(self.resultImage)
+
         self.widget = QWidget()
         self.widget.setLayout(self.column01)
         self.setCentralWidget(self.widget)
@@ -188,7 +193,7 @@ class ExportScreen (QMainWindow):
         return result
     def goToMainScr(self):
         self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
-        self.carPicture.setPixmap(self.carPixmap)
+        self.streamVideo.setPixmap(self.carPixmap)
         self.stackWidget.setCurrentWidget(self.mainWindow)
     # def goToInfoScr(self):
     #     self.stackWidget.setCurrentWidget(self.exportScreenInfo)
@@ -255,13 +260,13 @@ class ExportScreen (QMainWindow):
             self.carPixmap = QPixmap(self.imageLink)
             # self.carPixmap = QPixmap("Detect_license_plate\\test_images\\5.jpg")
             self.carPixmap.scaled(500, 300)
-            self.carPicture.setPixmap(self.carPixmap)
+            self.streamVideo.setPixmap(self.carPixmap)
             print(AppStr.DETECT_SUCCESS)
         except Exception:
             print(AppStr.DETECT_FAILED)
             self.input3.input.setText(AppStr.DETECT_FAILED)
             self.carPixmap = QPixmap(self.imageLink)
-            self.carPicture.setPixmap(self.carPixmap)
+            self.streamVideo.setPixmap(self.carPixmap)
     def trySaveAndGo(self):
         if self.checkStaffMeas and self.checkComp:
             self.saveInfo()
@@ -300,16 +305,18 @@ class ExportScreen (QMainWindow):
         self.generalConnect.commit()
         self.canGo = True
 
-    # def connectCamera(self) :
-        # cap = cv2.VideoCapture('rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live') #IP Camera
-    
-        # while(True):
-        #     self.frame = cap.read()
-        #     self.frame=cv2.resize(self.frame, (960, 540)) 
-        #     # cv2.imshow('Capturing',frame)
-            
-        #     # if cv2.waitKey(1) & 0xFF == ord('q'): #click q to stop capturing
-        #     #     break
-        # cap.release()
-        # cv2.destroyAllWindows()
-        # return 0
+    def getStreamVideo(self):
+        self.videoPixmap = QPixmap(720, 400)
+        cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+        def update_video_stream():
+            res, frame = cap.read()
+            if res:
+                resized_frame = cv2.resize(frame, (720, 400))
+                image = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB)
+                image = QImage(image, image.shape[1], image.shape[0], QImage.Format_RGB888)
+                self.videoPixmap = QPixmap.fromImage(image)
+                self.streamVideo.setPixmap(self.videoPixmap)
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(update_video_stream)
+        self.timer.start(30)

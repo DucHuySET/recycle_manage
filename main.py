@@ -56,7 +56,8 @@ def main():
     widget_stack.addWidget(export_screen)
     widget_stack.addWidget(export_screen_info)
 
-    widget_stack.showMaximized()
+    #widget_stack.showMaximized()
+    #widget_stack.showFullScreen()
     widget_stack.show()
     # start the app
     sys.exit(app.exec())
