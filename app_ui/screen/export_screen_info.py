@@ -257,26 +257,37 @@ class ExportScreenInfo (QMainWindow):
     def readScaleData(self):
         try:
             ser = serial.Serial(
-                port='COM8',
+                port='COM5',
                 baudrate=9600,
                 timeout=1,
-                parity=serial.PARITY_ODD,
-                stopbits=serial.STOPBITS_TWO,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
                 bytesize=serial.EIGHTBITS
             )
 
-            ser.isOpen()
+            # ser.isOpen()
+            
+            print(ser.readline())
+            data = ser.readline().replace(b'\r', b'').replace(b'\x02\x01', b'').decode().strip()
+            self.dataStr = data
+            print(self.dataStr)
 
-            for i in range(10):
-                bytesToRead = ser.inWaiting()
-                data = ser.read(bytesToRead)
-                time.sleep(2)
-                # print(data)
-                self.dataStr = str(data).replace("b\'", "").replace("\'","")
-                print(self.dataStr)
-                if self.dataStr != "":
-                    self.input4.input.setText(self.dataStr)
-                    break
+            if self.dataStr != "":
+                if self.dataStr[0] == '0':   # 0 == net weight
+                    self.weight = data[1:8]
+                    print('weight =', self.weight)
+                    self.input4.input.setText(self.weight)
+                elif self.dataStr[0] == '4':   # 4 == tare
+                    tare = data[1:8]    # dont care
+                    # print('tare   =', tare)      # dont care
+                elif self.dataStr[8] == '0':   # 0 == net weight
+                    self.weight = data[9:16]
+                    print('weight =', self.weight)
+                    self.input4.input.setText(self.weight)
+                elif self.dataStr[8] == '4':   # 4 == tare
+                    tare = data[9:16]    # dont care
+                    # print('tare   =', tare)      # dont care
+
             # self.scaleData = readRs232()
             # if self.dataStr != "":
             #     self.input4.input.setText(self.scaleData)

@@ -327,7 +327,7 @@ class Import_screen(QMainWindow):
             # if self.dataStr != "":
             #     self.input4.input.setText(self.scaleData)
         except Exception:
-            print('Không đọc được giá trị cân')
+            print(AppStr.CANT_READ_SCALE)
     def saveInfo(self):
         self.input1.input.setFocus()
         self.generalCursor.execute(
