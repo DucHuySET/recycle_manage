@@ -3,6 +3,7 @@ import torch
 import cv2
 import time
 import pytesseract
+from model.detect_result_model import *
 
 
 
@@ -200,8 +201,8 @@ def deploy(img_path=None, vid_path=None,vid_out = None):
         ## closing all windows
         if cv2.waitKey(5) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
-        # return frame, plate_number
-        return plate_number
+        return DetectResult(plate_number, frame)
+        # return plate_number
 
 
 

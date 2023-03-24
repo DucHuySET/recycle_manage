@@ -130,6 +130,7 @@ class buildLabel(QLabel):
         super().__init__()
         self.setText(text)
         self.setFixedHeight(SetHeightToScreen(height))
+        self.setFixedWidth(SetWidthToScreen(750))
         self.setStyleSheet(f'''
         QLabel {{
             background-color: #474747;

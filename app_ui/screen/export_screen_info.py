@@ -202,8 +202,6 @@ class ExportScreenInfo (QMainWindow):
     def goToMainScr(self):
         self.exportScreen.clearField()
         self.exportScreen.input1.input.setFocus()
-        self.exportScreen.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
-        self.exportScreen.carPicture.setPixmap(self.exportScreen.carPixmap)
         self.stackWidget.setCurrentWidget(self.mainWindow)
     def setTurn(self):
         self.turn.setText('Lượt cân: ' + self.input1.input.text())

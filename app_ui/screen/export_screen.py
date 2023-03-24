@@ -167,8 +167,21 @@ class ExportScreen (QMainWindow):
         self.next_button.clicked.connect(self.trySaveAndGo)
         self.column_record.addWidget(self.next_button)
 
+        self.resultRow = QHBoxLayout()
+        self.resultRow.setAlignment(Qt.AlignHCenter)
+        self.resultRowLabel = QWidget()
+        self.resultRowLabel.setLayout(self.resultRow)
+        self.column_record.addWidget(self.resultRowLabel)
+
         self.resultImage = QLabel()
-        self.column_record.addWidget(self.resultImage)
+        self.resultImage.setFixedSize(450, 250)
+        self.resultRow.addWidget(self.resultImage)
+
+
+        # self.resultImage = QLabel()
+        # self.resultImage.setFixedSize(450, 250)
+        # self.column_record.addWidget(self.resultImage)
+        # self.column_record.setAlignment(Qt.AlignHCenter)
 
         self.widget = QWidget()
         self.widget.setLayout(self.column01)
@@ -230,13 +243,7 @@ class ExportScreen (QMainWindow):
         self.detectLicense()
         print('bks')
     def takePhoto(self):
-        rtsp = "rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live"
-        capture = cv2.VideoCapture()
-        capture.open(rtsp)
-        capture.set(3, 1920)  # ID number for width is 3
-        capture.set(4, 1080)  # ID number for height is 480
-        capture.set(10, 100)    # ID number for brightness is 10qq
-        result, image = capture.read()
+        result, image = self.cap.read()
         image = cv2.resize(image, (1920, 1080))
         dateTime = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
         print(dateTime)
@@ -245,28 +252,29 @@ class ExportScreen (QMainWindow):
             self.imageLink = "database\\truck_image\\" + dateTime + ".png"
             cv2.imwrite(self.imageLink, image)
             # cv2.waitKey(0)
-            time.sleep(5)
+            # time.sleep(5)
             # cv2.destroyWindow(dateTime)
         else:
             print(AppStr.NO_IMAGE_DETECT)
     def detectLicense(self):
+        self.input3.input.setText(AppStr.PLEASE_WAIT)
         try:
             self.input3.input.setText(AppStr.PLEASE_WAIT)
             print(AppStr.PLEASE_WAIT)
-            self.exportData.truck = str(deploy(self.imageLink)).replace(';', '')
-            # self.exportData.truck = str(deploy("Detect_license_plate\\test_images\\5.jpg")).replace(';', '')
+            result = deploy(self.imageLink)
+            self.detectResult = DetectResult(str(result.plateData).replace(';', ''), result.croppedImage)
+            self.exportData.truck = self.detectResult.plateData
             self.exportData.evident = self.imageLink
             self.input3.input.setText(self.exportData.truck)
-            self.carPixmap = QPixmap(self.imageLink)
-            # self.carPixmap = QPixmap("Detect_license_plate\\test_images\\5.jpg")
-            self.carPixmap.scaled(500, 300)
-            self.streamVideo.setPixmap(self.carPixmap)
+            self.platePixmap = QPixmap(450, 250)
+            self.platePixmap = QPixmap.fromImage(cv2.resize(self.detectResult.croppedImage,(450,250)))
+            self.resultImage.setPixmap(self.platePixmap)
             print(AppStr.DETECT_SUCCESS)
         except Exception:
             print(AppStr.DETECT_FAILED)
             self.input3.input.setText(AppStr.DETECT_FAILED)
-            self.carPixmap = QPixmap(self.imageLink)
-            self.streamVideo.setPixmap(self.carPixmap)
+            self.platePixmap = QPixmap(self.imageLink)
+            self.resultImage.setPixmap(self.platePixmap)
     def trySaveAndGo(self):
         if self.checkStaffMeas and self.checkComp:
             self.saveInfo()
@@ -307,9 +315,9 @@ class ExportScreen (QMainWindow):
 
     def getStreamVideo(self):
         self.videoPixmap = QPixmap(720, 400)
-        cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+        self.cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
         def update_video_stream():
-            res, frame = cap.read()
+            res, frame = self.cap.read()
             if res:
                 resized_frame = cv2.resize(frame, (720, 400))
                 image = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB)
