@@ -222,10 +222,10 @@ insert_to_pack = """
     )
 """
 
-# cursor.execute(create_table_staff)
-# connection.commit()
-# cursor.execute(create_table_company)
-# connection.commit()
+cursor.execute(create_table_staff)
+connection.commit()
+cursor.execute(create_table_company)
+connection.commit()
 # cursor.execute(create_table_truck)
 # connection.commit()
 # cursor.execute(create_table_scrap)
