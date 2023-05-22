@@ -12,10 +12,41 @@ from app_ui.screen.main_screen import *
 from app_ui.base_widget.utils_widget import *
 from app_ui.base_widget.utlis_func import *
 
+
+
+
 def main():
     def exitHandler():
-        import_screen.generalConnect.close()
+        pass
+        # import_screen.generalConnect.close()
         # export_screen.
+
+    def goToImportScr():
+        import_screen = Import_screen(widget_stack, mainWindow)
+        widget_stack.addWidget(import_screen)
+        widget_stack.setCurrentWidget(import_screen)
+        print(widget_stack.count())
+        import_screen.input1.input.setFocus()
+
+    # export_screen = None
+
+    def goToExportScr():
+        # global export_screen
+        export_screen = ExportScreen(widget_stack, mainWindow)
+        widget_stack.addWidget(export_screen)
+        export_screen.next_button.clicked.connect(goToInfoScr)
+        widget_stack.setCurrentWidget(export_screen)
+        print(widget_stack.count())
+        # return export_screen
+
+    def goToInfoScr():
+        export_screen = goToExportScr()
+        export_screen_info = ExportScreenInfo(widget_stack, mainWindow, export_screen)
+        widget_stack.addWidget(export_screen_info)
+        if export_screen.canGo:
+            widget_stack.setCurrentWidget(export_screen_info)
+            mainWindow.exportId = widget_stack.export_screen.exportData.id
+            export_screen_info.input2.input.setFocus()
 
     app = QApplication(sys.argv)
     app.aboutToQuit.connect(exitHandler)
@@ -27,40 +58,37 @@ def main():
     app.setStyleSheet('QApplication{background-color: yellow; color: blue}')
 
     mainWindow = MainWindow()
-    import_screen = Import_screen(widget_stack, mainWindow)
-    export_screen = ExportScreen(widget_stack, mainWindow)
-    export_screen_info = ExportScreenInfo(widget_stack, mainWindow, export_screen)
-
-    def goToImportScr():
-        widget_stack.setCurrentWidget(import_screen)
-        import_screen.input1.input.setFocus()
-        
     mainWindow.button_import.clicked.connect(goToImportScr)
-
-    def goToExportScr():
-        widget_stack.setCurrentWidget(export_screen)
     mainWindow.button_export.clicked.connect(goToExportScr)
+    # widget_stack.export_screen.next_button.clicked.connect(goToInfoScr)
+
+    # import_screen = Import_screen(widget_stack, mainWindow)
+    # export_screen = ExportScreen(widget_stack, mainWindow)
+    # export_screen_info = ExportScreenInfo(widget_stack, mainWindow, export_screen)
+
+    
+    # mainWindow.button_import.clicked.connect(goToImportScr)
+
+    
+    # mainWindow.button_export.clicked.connect(goToExportScr)
 
 
-    def goToInfoScr():
-        if export_screen.canGo:
-            widget_stack.setCurrentWidget(export_screen_info)
-            mainWindow.exportId = export_screen.exportData.id
-            export_screen_info.input2.input.setFocus()
-    export_screen.next_button.clicked.connect(goToInfoScr)
+    
+    # export_screen.next_button.clicked.connect(goToInfoScr)
 
     
 
     widget_stack.addWidget(mainWindow)
-    widget_stack.addWidget(import_screen)
-    widget_stack.addWidget(export_screen)
-    widget_stack.addWidget(export_screen_info)
+    print(widget_stack.count())
+    # widget_stack.addWidget(import_screen)
+    # widget_stack.addWidget(export_screen)
+    # widget_stack.addWidget(export_screen_info)
 
     #widget_stack.showMaximized()
     #widget_stack.showFullScreen()
     widget_stack.show()
     # start the app
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
     
 if __name__ == "__main__":

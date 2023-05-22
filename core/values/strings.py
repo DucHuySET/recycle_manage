@@ -9,3 +9,7 @@ class AppStr:
     ERROR = 'Có lỗi xảy ra'
     CONTINUE = 'Tiếp tục'
     CANCEL = 'Hủy bỏ'
+    CAM_ERROR = 'Loi ket noi camera, vui long kiem tra lai ket noi mang, camera hoac lien he bo phan ho tro'
+    SCALE_ERROR = 'Loi ket noi voi can, vui long kiem tra day cam va can hoac lien he nguoi ho tro'
+    CAM_ERROR_TITLE = 'Loi ket noi camera'
+    SCALE_ERROR_TITLE = 'loi ket noi can'

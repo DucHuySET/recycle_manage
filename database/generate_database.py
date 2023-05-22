@@ -1,6 +1,6 @@
 import sqlite3
 
-connection = sqlite3.connect('database\general.db')
+connection = sqlite3.connect('general.db')
 
 cursor = connection.cursor()
 
@@ -159,8 +159,8 @@ create_table_export_info = """
 ### insert to staff table
 insert_to_staff = """
     INSERT INTO staff VALUES (
-        00002,
-        'Trần Văn B',
+        1,
+        'Nguyen Văn A',
         'Xưởng cân',
         'Cân đầu vào',
         0123456789,
@@ -172,8 +172,8 @@ insert_to_staff = """
 ### insert to company table
 insert_to_company = """
     INSERT INTO company VALUES (
-        00002,
-        'HUST',
+        00003,
+        'IOT',
         0123456789,
         '110110',
         'Dai Co Viet',
@@ -186,8 +186,8 @@ insert_to_company = """
 ### insert to trucks table
 insert_to_truck = """
     INSERT INTO truck VALUES (
-        00002,
-        00002,
+        00001,
+        00001,
         '88H8-5555',
         'Hyundai',
         '2000kg',
@@ -201,8 +201,8 @@ insert_to_truck = """
 ### insert to scrap table
 insert_to_scrap = """
     INSERT INTO scrap VALUES (
-        00002,
-        'Sắt',
+        00003,
+        'Cooper',
         '',
         'kg',
         '00:00',
@@ -222,10 +222,10 @@ insert_to_pack = """
     )
 """
 
-cursor.execute(create_table_staff)
-connection.commit()
-cursor.execute(create_table_company)
-connection.commit()
+# cursor.execute(create_table_staff)
+# connection.commit()
+# cursor.execute(create_table_company)
+# connection.commit()
 # cursor.execute(create_table_truck)
 # connection.commit()
 # cursor.execute(create_table_scrap)
@@ -242,8 +242,11 @@ connection.commit()
 # cursor.execute(insert_to_staff)
 # connection.commit()
 # cursor.execute(insert_to_company)
+# connection.commit()
 # cursor.execute(insert_to_truck)
+# connection.commit()
 # cursor.execute(insert_to_scrap)
+# connection.commit()
 # cursor.execute(insert_to_pack)
 # connection.commit()
 
