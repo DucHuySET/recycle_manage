@@ -12,10 +12,10 @@ from core.values.strings import AppStr
 from app_ui.base_widget.utlis_func import *
 
 class ExportScreenInfo (QMainWindow):
-    def __init__(self, stackWidget, mainWindow, exportScreen):
+    def __init__(self, stackWidget, mainWindow):
         self.stackWidget = stackWidget
         self.mainWindow = mainWindow
-        self.exportScreen = exportScreen
+        # self.exportScreen = exportScreen
         super().__init__()
         self.setWindowTitle("Waste Management")
         # self.setGeometry(0,0,1000,1000)
@@ -23,7 +23,7 @@ class ExportScreenInfo (QMainWindow):
         self.uiComponents()
         self.show()
         self.currentTurn = 0
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('/home/ctarglab/Desktop/DaiKin/recycling_managment/database/general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportInfoData = ExportInfoData()
         self.checkPakage = False
@@ -167,9 +167,9 @@ class ExportScreenInfo (QMainWindow):
 
         self.column_record.addWidget(sizedBox10())
 
-        self.back_button = buildButton("Quay lại màn hình khai báo", 750, 80)
-        self.back_button.clicked.connect(self.goToExportScr)
-        self.column_record.addWidget(self.back_button)
+        # self.back_button = buildButton("Quay lại màn hình khai báo", 750, 80)
+        # self.back_button.clicked.connect(self.goToExportScr)
+        # self.column_record.addWidget(self.back_button)
 
         self.main_button = buildButton("Quay lại màn hình chính", 750, 80)
         self.main_button.clicked.connect(self.goToMainScr)
@@ -196,12 +196,12 @@ class ExportScreenInfo (QMainWindow):
         result = self.generalCursor.fetchone()
         print(result[0])
         return result
-    def goToExportScr(self):
-        self.exportScreen.input1.input.setFocus()
-        self.stackWidget.setCurrentWidget(self.exportScreen)
+    # def goToExportScr(self):
+    #     self.exportScreen.input1.input.setFocus()
+    #     self.stackWidget.setCurrentWidget(self.exportScreen)
     def goToMainScr(self):
-        self.exportScreen.clearField()
-        self.exportScreen.input1.input.setFocus()
+        # self.exportScreen.clearField()
+        # self.exportScreen.input1.input.setFocus()
         self.stackWidget.setCurrentWidget(self.mainWindow)
     def setTurn(self):
         self.turn.setText('Lượt cân: ' + self.input1.input.text())
@@ -255,7 +255,7 @@ class ExportScreenInfo (QMainWindow):
     def readScaleData(self):
         try:
             ser = serial.Serial(
-                port='COM5',
+                port='/dev/ttyUSB0',
                 baudrate=9600,
                 timeout=1,
                 parity=serial.PARITY_NONE,
@@ -291,6 +291,7 @@ class ExportScreenInfo (QMainWindow):
             #     self.input4.input.setText(self.scaleData)
         except Exception:
             print(AppStr.CANT_READ_SCALE)
+            ShowNotification(AppStr.SCALE_ERROR_TITLE, AppStr.SCALE_ERROR, print('error'))
     def saveTurn(self):
         self.generalCursor.execute(
             """

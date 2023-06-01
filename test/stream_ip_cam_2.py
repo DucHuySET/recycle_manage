@@ -2,12 +2,12 @@ import cv2
 import time
 def main(args):
     #cap = cv2.VideoCapture(0) #default camera
-    cap = cv2.VideoCapture('rtsp://admin:Ctarg_123@192.168.1.100') #IP Camera
+    cap = cv2.VideoCapture("rtsp://admin:Admin@123@27.72.149.50:1554/profile3/media.smp") #IP Camera
     
     while(True):
         try:
             ret, frame = cap.read()
-            frame=cv2.resize(frame, (600, 600)) 
+            frame=cv2.resize(frame, (960, 540)) 
             cv2.imshow('Capturing',frame)
             
             if cv2.waitKey(1) & 0xFF == ord('q'): #click q to stop capturing

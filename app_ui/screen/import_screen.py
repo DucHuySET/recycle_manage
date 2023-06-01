@@ -21,7 +21,7 @@ class Import_screen(QMainWindow):
         self.setStyleSheet("background-color: #1d212d")
         self.uiComponents()
         self.show()
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('/home/ctarglab/Desktop/DaiKin/recycling_managment/database/general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.importData = ImportData()
         self.checkStaffMeas= False
@@ -211,6 +211,7 @@ class Import_screen(QMainWindow):
     def goToMainScr(self):
         # self.generalConnect.close()
         self.stackWidget.setCurrentWidget(self.mainWindow)
+        self.stackWidget.removeWidget(self)
     def setStaffNameMeas(self):
         staffId = -1
         try: 
@@ -293,21 +294,22 @@ class Import_screen(QMainWindow):
     def readScaleData(self):
         try:
             ser = serial.Serial(
-                port='COM5',
+                port='/dev/ttyUSB0',
                 baudrate=9600,
                 timeout=1,
                 parity=serial.PARITY_NONE,
                 stopbits=serial.STOPBITS_ONE,
                 bytesize=serial.EIGHTBITS
             )
-            print('bat dau doc can')
+            print('doc can')
 
-            #ser.isOpen()
+            # ser.isOpen()
+
             print(ser.readline())
             data = ser.readline().replace(b'\r', b'').replace(b'\x02\x01', b'').decode().strip()
             self.dataStr = data
             print(self.dataStr)
-                                                                
+
             if self.dataStr != "":
                 if self.dataStr[0] == '0':   # 0 == net weight
                     self.weight = data[1:8]
@@ -323,11 +325,13 @@ class Import_screen(QMainWindow):
                 elif self.dataStr[8] == '4':   # 4 == tare
                     tare = data[9:16]    # dont care
                     # print('tare   =', tare)      # dont care
+
             # self.scaleData = readRs232()
             # if self.dataStr != "":
             #     self.input4.input.setText(self.scaleData)
         except Exception:
-            print(AppStr.CANT_READ_SCALE)
+            ShowNotification(AppStr.SCALE_ERROR_TITLE, AppStr.SCALE_ERROR, print('error'))
+        #     print('Không đọc được giá trị cân')
     def saveInfo(self):
         self.input1.input.setFocus()
         self.generalCursor.execute(

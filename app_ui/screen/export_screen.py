@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont, QPixmap
 from app_ui.base_widget.utils_widget import *
+from app_ui.screen.export_screen_info import ExportScreenInfo
 from model.expotModel import *
 from core.values.strings import AppStr
 from Detect_license_plate.deploy import *
@@ -22,7 +23,7 @@ class ExportScreen (QMainWindow):
         self.uiComponents()
         self.show()
         self.getStreamVideo()
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('/home/ctarglab/Desktop/DaiKin/recycling_managment/database/general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportData = ExportData()
         self.imageLink = ''
@@ -163,8 +164,9 @@ class ExportScreen (QMainWindow):
         self.column_record.addWidget(self.back_button)
 
         self.next_button = buildButton("Thông tin lượt cân", 750, 80)
-        # self.next_button.clicked.connect(self.goToInfoScr)
+        
         self.next_button.clicked.connect(self.trySaveAndGo)
+        self.next_button.clicked.connect(self.goToInfoScr)
         self.column_record.addWidget(self.next_button)
 
         self.resultRow = QHBoxLayout()
@@ -208,8 +210,14 @@ class ExportScreen (QMainWindow):
         self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
         self.streamVideo.setPixmap(self.carPixmap)
         self.stackWidget.setCurrentWidget(self.mainWindow)
-    # def goToInfoScr(self):
-    #     self.stackWidget.setCurrentWidget(self.exportScreenInfo)
+        self.stackWidget.removeWidget(self)
+    def goToInfoScr(self):
+        if self.canGo:
+            self.clearField()
+            # self.exportScreenInfo = ExportScreenInfo(self.stackWidget, self.mainWindow)
+            self.stackWidget.setCurrentWidget(self.exportScreenInfo)
+            self.stackWidget.removeWidget(self)
+
     def setStaffName(self):
         staffId = -1
         try: 
@@ -249,7 +257,7 @@ class ExportScreen (QMainWindow):
         print(dateTime)
         if result:
             # cv2.imshow(dateTime, image)
-            self.imageLink = "database\\truck_image\\" + dateTime + ".png"
+            self.imageLink = "database/truck_image/" + dateTime + ".png"
             cv2.imwrite(self.imageLink, image)
             # cv2.waitKey(0)
             # time.sleep(5)
@@ -315,7 +323,10 @@ class ExportScreen (QMainWindow):
 
     def getStreamVideo(self):
         self.videoPixmap = QPixmap(720, 400)
-        self.cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+        try:
+            self.cap = cv2.VideoCapture("rtsp://admin:Ctarg_123@192.168.1.100")
+        except Exception:
+            ShowNotification(AppStr.CAM_ERROR_TITLE, AppStr.CAM_ERROR)
         def update_video_stream():
             res, frame = self.cap.read()
             if res:

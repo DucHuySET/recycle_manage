@@ -15,7 +15,8 @@ layout.addWidget(video_label)
 window.setLayout(layout)
 window.showMaximized()
 
-cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+# cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+cap = cv2.VideoCapture('rtsp://admin:Ctarg_123@192.168.1.100')
 
 def update_video_stream():
     ret, frame = cap.read()
