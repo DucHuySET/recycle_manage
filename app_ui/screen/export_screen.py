@@ -315,7 +315,7 @@ class ExportScreen (QMainWindow):
 
     def getStreamVideo(self):
         self.videoPixmap = QPixmap(720, 400)
-        self.cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+        self.cap = cv2.VideoCapture("rtsp://admin:Ctarg_123@192.168.1.100")
         def update_video_stream():
             res, frame = self.cap.read()
             if res:

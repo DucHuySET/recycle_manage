@@ -1,7 +1,7 @@
 import cv2 
 def main(args):
     #cap = cv2.VideoCapture(0) #default camera
-    cap = cv2.VideoCapture('rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live') #IP Camera
+    cap = cv2.VideoCapture('rtsp://admin:Ctarg_123@192.168.1.100') #IP Camera
     
     while(True):
         ret, frame = cap.read()

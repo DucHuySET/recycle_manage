@@ -1,9 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
-from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QLine, QRect, pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QFont, QIcon
+
+from PyQt5.QtGui import QIcon
 
 from app_ui.screen.import_screen import *
 from app_ui.screen.export_screen import *
