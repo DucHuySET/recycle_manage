@@ -312,6 +312,7 @@ class ExportScreen (QMainWindow):
                 )
         )
         self.generalConnect.commit()
+        self.generalConnect.close()
         self.canGo = True
 
     def getStreamVideo(self):

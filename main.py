@@ -16,10 +16,6 @@ from app_ui.base_widget.utlis_func import *
 
 
 def main():
-    def exitHandler():
-        pass
-        # import_screen.generalConnect.close()
-        # export_screen.
 
     def goToImportScr():
         import_screen = Import_screen(widget_stack, mainWindow)
@@ -40,7 +36,7 @@ def main():
 
     def goToInfoScr():
         global export_screen
-        export_screen_info = ExportScreenInfo(widget_stack, mainWindow, export_screen)
+        export_screen_info = ExportScreenInfo(widget_stack, mainWindow)
         if export_screen.canGo: 
             widget_stack.addWidget(export_screen_info)
             widget_stack.setCurrentWidget(export_screen_info)
@@ -48,8 +44,7 @@ def main():
             export_screen_info.input2.input.setFocus()
 
     app = QApplication(sys.argv)
-    app.aboutToQuit.connect(exitHandler)
-
+    
     widget_stack = QStackedWidget()
     widget_stack.setFixedSize(SetWidthToScreen(1920), SetHeightToScreen(1080))
     widget_stack.setWindowTitle('Quản lý nhập - xuất phế liệu')
