@@ -45,7 +45,6 @@ class ExportScreenInfo (QMainWindow):
         self.body = QHBoxLayout()
         # body.setStretch(1, 50)
         self.column01.addLayout(self.body)
-
         self.input_Field = QWidget()
         self.input_Field.setObjectName("input_Field")
         self.input_Field.setFixedSize(SetWidthToScreen(1100),SetHeightToScreen(900))
