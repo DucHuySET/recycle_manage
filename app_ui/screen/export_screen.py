@@ -22,7 +22,7 @@ class ExportScreen (QMainWindow):
         self.uiComponents()
         self.show()
         self.getStreamVideo()
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('database\\general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportData = ExportData()
         self.imageLink = ''
@@ -208,6 +208,7 @@ class ExportScreen (QMainWindow):
         self.carPixmap = QPixmap('assets\\images\\1280x720-grey-solid-color.jpg')
         self.streamVideo.setPixmap(self.carPixmap)
         self.stackWidget.setCurrentWidget(self.mainWindow)
+        self.stackWidget.removeWidget(self)
     # def goToInfoScr(self):
     #     self.stackWidget.setCurrentWidget(self.exportScreenInfo)
     def setStaffName(self):
@@ -315,7 +316,7 @@ class ExportScreen (QMainWindow):
 
     def getStreamVideo(self):
         self.videoPixmap = QPixmap(720, 400)
-        self.cap = cv2.VideoCapture("rtsp://admin:Nhat24032002@192.168.1.2/?t=8995918764#live")
+        self.cap = cv2.VideoCapture("rtsp://admin:Ctarg_123@192.168.1.100")
         def update_video_stream():
             res, frame = self.cap.read()
             if res:

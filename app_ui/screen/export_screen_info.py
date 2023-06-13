@@ -23,7 +23,7 @@ class ExportScreenInfo (QMainWindow):
         self.uiComponents()
         self.show()
         self.currentTurn = 0
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('database\\general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportInfoData = ExportInfoData()
         self.checkPakage = False
@@ -167,9 +167,9 @@ class ExportScreenInfo (QMainWindow):
 
         self.column_record.addWidget(sizedBox10())
 
-        self.back_button = buildButton("Quay lại màn hình khai báo", 750, 80)
-        self.back_button.clicked.connect(self.goToExportScr)
-        self.column_record.addWidget(self.back_button)
+        # self.back_button = buildButton("Quay lại màn hình khai báo", 750, 80)
+        # self.back_button.clicked.connect(self.goToExportScr)
+        # self.column_record.addWidget(self.back_button)
 
         self.main_button = buildButton("Quay lại màn hình chính", 750, 80)
         self.main_button.clicked.connect(self.goToMainScr)

@@ -7,6 +7,8 @@ from PyQt5.QtGui import QFont
 from app_ui.base_widget.utils_widget import *
 from app_ui.base_widget.utlis_func import *
 
+import main
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -14,6 +16,7 @@ class MainWindow(QMainWindow):
         self.exportId = 0
         self.uiComponents()
         self.show()
+
     def uiComponents(self):
         #creating Column
         self.column = QVBoxLayout()
@@ -33,6 +36,7 @@ class MainWindow(QMainWindow):
 
         self.button_import = buildButton("Quản lý lượt cân \nđầu vào", SetWidthToScreen(300), SetHeightToScreen(200))
         self.row.addWidget(self.button_import)
+        # self.button_import.clicked.connect()
 
         self.button_export = buildButton("Quản lý lượt cân \nđầu ra", SetWidthToScreen(300), SetHeightToScreen(200))
         self.row.addWidget(self.button_export)

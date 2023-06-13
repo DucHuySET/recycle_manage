@@ -21,7 +21,7 @@ class Import_screen(QMainWindow):
         self.setStyleSheet("background-color: #1d212d")
         self.uiComponents()
         self.show()
-        self.generalConnect = sqlite3.connect('database\general.db')
+        self.generalConnect = sqlite3.connect('database\\general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.importData = ImportData()
         self.checkStaffMeas= False
@@ -29,6 +29,7 @@ class Import_screen(QMainWindow):
         self.checkPackage= False
         self.checkType= False
         self.checkInfo= False
+        
     def uiComponents(self):
         self.column01 = QVBoxLayout()
         self.column01.setContentsMargins(SetWidthToScreen(20),SetHeightToScreen(20),SetWidthToScreen(20),SetHeightToScreen(20))
@@ -211,6 +212,7 @@ class Import_screen(QMainWindow):
     def goToMainScr(self):
         # self.generalConnect.close()
         self.stackWidget.setCurrentWidget(self.mainWindow)
+        self.stackWidget.removeWidget(self)
     def setStaffNameMeas(self):
         staffId = -1
         try: 
