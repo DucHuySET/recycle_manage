@@ -46,7 +46,7 @@ def main():
     app = QApplication(sys.argv)
     
     widget_stack = QStackedWidget()
-    widget_stack.setFixedSize(SetWidthToScreen(1920), SetHeightToScreen(1080))
+    widget_stack.setFixedSize(SetWidthToScreen(1920), SetHeightToScreen(1000))
     widget_stack.setWindowTitle('Quản lý nhập - xuất phế liệu')
     widget_stack.setWindowIcon(QIcon('D:/Qt/Project/Test_Qt_Creator/assets/images/CTARG.png'))
     app.setStyleSheet('QApplication{background-color: yellow; color: blue}')

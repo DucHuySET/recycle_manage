@@ -22,7 +22,7 @@ class ExportScreen (QMainWindow):
         self.uiComponents()
         self.show()
         self.getStreamVideo()
-        self.generalConnect = sqlite3.connect('database\\general.db')
+        self.generalConnect = sqlite3.connect('recycling_managment/database/general.db')
         self.generalCursor = self.generalConnect.cursor()
         self.exportData = ExportData()
         self.imageLink = ''
@@ -48,7 +48,7 @@ class ExportScreen (QMainWindow):
 
         self.input_Field = QWidget()
         self.input_Field.setObjectName("input_Field")
-        self.input_Field.setFixedSize(SetWidthToScreen(1100),SetHeightToScreen(900))
+        self.input_Field.setFixedSize(SetWidthToScreen(1000),SetHeightToScreen(900))
         self.input_Field.setStyleSheet(f'''
         QWidget {{
             background-color: #2e2e2e;
@@ -93,7 +93,7 @@ class ExportScreen (QMainWindow):
 
         self.row1 = QHBoxLayout()
         self.row1.addWidget(buildCardItem('Nhân viên phụ trách cân đầu vào'))
-        self.input1 = buildInputForm(500, 80)
+        self.input1 = buildInputForm(450, 80)
         self.input1.input.textChanged.connect(self.setStaffName)
         self.row1.addWidget(self.input1)
         self.column_Input.addLayout(self.row1)
@@ -101,7 +101,7 @@ class ExportScreen (QMainWindow):
         self.row2 = QHBoxLayout()
         self.row2.setContentsMargins(0,0,0,0)
         self.row2.addWidget(buildCardItem('Công ty thu gom phế liệu'))
-        self.input2 = buildInputForm(500, 80)
+        self.input2 = buildInputForm(450, 80)
         self.input2.input.textChanged.connect(self.setCompName)
         self.row2.addWidget(self.input2)
         self.column_Input.addLayout(self.row2)
@@ -110,7 +110,7 @@ class ExportScreen (QMainWindow):
         self.row3 = QHBoxLayout()
         self.row3.setContentsMargins(0,0,0,0)
         self.row3.addWidget(buildCardItem('Xe vận tải'))
-        self.input3 = buildInputForm(500, 80, False)
+        self.input3 = buildInputForm(450, 80, False)
         self.input3.input.textChanged.connect(self.setCarLabel)
         self.row3.addWidget(self.input3)
         self.column_Input.addLayout(self.row3)

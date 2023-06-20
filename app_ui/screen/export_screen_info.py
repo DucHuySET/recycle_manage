@@ -47,7 +47,7 @@ class ExportScreenInfo (QMainWindow):
         self.column01.addLayout(self.body)
         self.input_Field = QWidget()
         self.input_Field.setObjectName("input_Field")
-        self.input_Field.setFixedSize(SetWidthToScreen(1100),SetHeightToScreen(900))
+        self.input_Field.setFixedSize(SetWidthToScreen(1000),SetHeightToScreen(900))
         self.input_Field.setStyleSheet(f'''
         QWidget {{
             background-color: #2e2e2e;
@@ -86,7 +86,7 @@ class ExportScreenInfo (QMainWindow):
 
         self.row1 = QHBoxLayout()
         self.row1.addWidget(buildCardItem('Lượt cân'))
-        self.input1 = buildInputForm(500, 80)
+        self.input1 = buildInputForm(450, 80)
         self.input1.input.setText("1")
         self.input1.input.clearFocus()
         self.input1.focusNextPrevChild(True)
@@ -96,21 +96,21 @@ class ExportScreenInfo (QMainWindow):
 
         self.row2 = QHBoxLayout()
         self.row2.addWidget(buildCardItem('Thùng bì'))
-        self.input2 = buildInputForm(500, 80)
+        self.input2 = buildInputForm(450, 80)
         self.input2.input.textChanged.connect(self.setPackage)
         self.row2.addWidget(self.input2)
         self.column_Input.addLayout(self.row2)
         
         self.row3 = QHBoxLayout()
         self.row3.addWidget(buildCardItem('Chủng loại phế liệu'))
-        self.input3 = buildInputForm(500, 80)
+        self.input3 = buildInputForm(450, 80)
         self.input3.input.textChanged.connect(self.setType)
         self.row3.addWidget(self.input3)
         self.column_Input.addLayout(self.row3)
 
         self.row4 = QHBoxLayout()
         self.row4.addWidget(buildCardItem('Xác nhận thông tin cân'))
-        self.input4 = buildInputForm(500, 80)
+        self.input4 = buildInputForm(450, 80)
         self.input4.input.textChanged.connect(self.setTurnInfo)
         self.input4.input.setMaxLength(20)
         self.row4.addWidget(self.input4)

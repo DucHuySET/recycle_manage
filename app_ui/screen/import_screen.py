@@ -169,12 +169,12 @@ class Import_screen(QMainWindow):
         self.measInfo = buildLabel('Thông tin cân: ')
         self.column_record.addWidget(self.measInfo)
 
-        self.saveButton = buildButton("Lưu", SetWidthToScreen(750), SetHeightToScreen(80))
+        self.saveButton = buildButton("Lưu", SetWidthToScreen(900), SetHeightToScreen(80))
         # self.saveButton.clicked.connect(self.goToMainScr)
         self.column_record.addWidget(self.saveButton)
         self.saveButton.clicked.connect(self.trySaveInfo)
 
-        self.back_button = buildButton("Quay lại", SetWidthToScreen(750), SetHeightToScreen(80))
+        self.back_button = buildButton("Quay lại", SetWidthToScreen(900), SetHeightToScreen(80))
         self.back_button.clicked.connect(self.goToMainScr)
         self.column_record.addWidget(self.back_button)
 
